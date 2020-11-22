@@ -624,6 +624,7 @@ class Chain(Molecule, metaclass=StructureClass):
         self._model = None
         self._helices = helices or []
         self._strands = strands or []
+        self.type = kwargs.get("type")
 
 
     def __repr__(self):

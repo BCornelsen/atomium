@@ -428,7 +428,9 @@ def update_models_list(mmcif_dict, data_dict):
             model = {"polymer": {}, "non-polymer": {}, "water": {}, "branched": {}}
             model_num = atom["pdbx_PDB_model_num"]
         mol_type = types[entities[atom["label_asym_id"]]]
-        if mol_type == "polymer" or mol_type == "branched":
+        if mol_type == "polymer":
+            add_polymer_to_polymer(atom, aniso, model, names, [ el for el in mmcif_dict['entity_poly'] if el['entity_id'] == model_num][0]['type'])
+        elif mol_type == "branched":
             add_atom_to_polymer(atom, aniso, model, names)
         else:
             add_atom_to_non_polymer(atom, aniso, model, mol_type, names)
@@ -469,6 +471,11 @@ def make_secondary_structure(mmcif_dict):
          strand[f"pdbx_{x}_PDB_ins_code"].replace("?", ""),
         ) for x in ["beg", "end"]])
     return {"helices": helices, "strands": strands}
+
+def add_polymer_to_polymer(atom, aniso, model, names, type):
+    add_atom_to_polymer(atom, aniso, model, names)
+    mol_id = atom["auth_asym_id"]
+    model["polymer"][mol_id]['poly_type'] = type
 
 
 def add_atom_to_polymer(atom, aniso, model, names):

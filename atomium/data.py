@@ -254,13 +254,15 @@ def create_chains(model_dict):
          chain["residues"].items(), key=lambda x: x[1]["number"]
         )]
         res_by_id = {r.id: r for r in res}
+        poly_type = chain['poly_type'] if 'poly_type' in chain else None
         for res1, res2 in zip(res[:-1], res[1:]):
             res1._next, res2._previous = res2, res1
         chains.append(Chain(
          *res, id=chain_id,
          helices=[[res_by_id[r] for r in h] for h in chain["helices"]],
          strands=[[res_by_id[r] for r in s] for s in chain["strands"]],
-         internal_id=chain["internal_id"], sequence=chain["sequence"]
+         internal_id=chain["internal_id"], sequence=chain["sequence"],
+         type=poly_type
         ))
     return chains
 
