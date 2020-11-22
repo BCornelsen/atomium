@@ -429,7 +429,8 @@ def update_models_list(mmcif_dict, data_dict):
             model_num = atom["pdbx_PDB_model_num"]
         mol_type = types[entities[atom["label_asym_id"]]]
         if mol_type == "polymer":
-            add_polymer_to_polymer(atom, aniso, model, names, [ el for el in mmcif_dict['entity_poly'] if el['entity_id'] == model_num][0]['type'])
+            poly_type = [ el for el in mmcif_dict['entity_poly'] if el['entity_id'] == model_num][0]['type'] if 'entity_poly' in mmcif_dict else None
+            add_polymer_to_polymer(atom, aniso, model, names, poly_type)
         elif mol_type == "branched":
             add_atom_to_polymer(atom, aniso, model, names)
         else:
